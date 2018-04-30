@@ -24,3 +24,4 @@ libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
+

@@ -1,4 +1,11 @@
 language: scala
 scala:
    - 2.11.8
-script: sbt clean coverage test
+# script: sbt clean coverage test
+
+# source: https://github.com/scoverage/sbt-coveralls
+script:
+  - sbt clean coverage test coverageReport &&
+    sbt coverageAggregate
+after_success:
+  - sbt coveralls
