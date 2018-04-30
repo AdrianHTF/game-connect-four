@@ -2,9 +2,9 @@ package de.htwg.se.connectfour
 
 import com.google.inject.Guice
 import de.htwg.se.connectfour.mvc.controller.Controller
-import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
+import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.view.{ GamingPlayers, Gui, Tui }
+import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
 import scala.io.StdIn
 

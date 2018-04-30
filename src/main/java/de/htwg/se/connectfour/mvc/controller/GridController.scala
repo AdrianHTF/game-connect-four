@@ -9,9 +9,14 @@ import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
 import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
 
+import akka.actor.Actor
+import akka.actor.Props
+import akka.event.Logging
+
+
 import scala.swing.Publisher
 
-case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
+case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging with Actor {
 
   private var revertManager: RevertManager = _
 
@@ -20,6 +25,8 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   private var checkWinner: CheckWinner = _
   private var validator: Validator = _
   private var _gameFinished = false
+
+  val log = Logging(context.system, this)
 
   createEmptyGrid(columns, rows)
 
@@ -122,4 +129,8 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   override def grid: Grid = _grid
 
+  override def receive: Receive = {
+    case "test" => log.info("received test")
+    case _ => log.info("received unknown message")
+  }
 }

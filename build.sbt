@@ -1,10 +1,14 @@
+// akka source: https://alvinalexander.com/scala/simple-scala-akka-actor-examples-hello-world-actors
+
 name := "Connect four game"
 organization := "de.htwg.se"
 version := "1.0"
 scalaVersion := "2.11.8"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
-resolvers += Resolver.jcenterRepo
+//resolvers += Resolver.jcenterRepo
+
+resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= {
   // specs2 3.7 is the last version to use scalacheck 1.12.5
@@ -21,7 +25,10 @@ libraryDependencies ++= {
   )
 }
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
+
 libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
+
+libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.2-M1"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
