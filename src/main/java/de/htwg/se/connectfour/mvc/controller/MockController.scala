@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
+import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 class MockController extends Controller {

@@ -1,14 +1,14 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
+import de.htwg.se.connectfour.mvc.controller.{ Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon }
 
 import scala.io.StdIn
 import scala.swing.Reactor
 
 /**
-  * Represents text user interface.
-  * Whenever player plays turn,
-  */
+ * Represents text user interface.
+ * Whenever player plays turn,
+ */
 case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Reactor {
 
   listenTo(controller)

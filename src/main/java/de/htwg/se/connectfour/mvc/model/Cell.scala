@@ -11,5 +11,4 @@ case class Cell(x: Int, y: Int, cellType: CellType) {
 
   override def toString: String = cellType.toString
 
-
 }

@@ -27,5 +27,4 @@ case class Validator(grid: Grid) {
 
   def isCellValid(column: Int, row: Int): Boolean = grid.isColumnValid(column) && grid.isRowValid(row)
 
-
 }

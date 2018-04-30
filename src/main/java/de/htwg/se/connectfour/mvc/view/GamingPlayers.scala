@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.{Controller, PlayerGridChanged}
+import de.htwg.se.connectfour.mvc.controller.{ Controller, PlayerGridChanged }
 import de.htwg.se.connectfour.mvc.model.player.Player
 import de.htwg.se.connectfour.mvc.model.types.CellType
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType

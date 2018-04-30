@@ -4,7 +4,7 @@ object StatusType extends Enumeration {
   type GameStatus = Value
   val STARTED, NEW, SET, FULL, INVALID, DRAW, UNDO, REDO, FINISHED = Value
 
-  val map: Map[GameStatus, String] = Map[GameStatus, String](
+  val gameStatusMap: Map[GameStatus, String] = Map[GameStatus, String](
     NEW -> "A new game was created",
     SET -> "A cell was set",
     FULL -> "Column is full",
@@ -16,7 +16,7 @@ object StatusType extends Enumeration {
   )
 
   def message(gameStatus: GameStatus): String = {
-    map(gameStatus)
+    gameStatusMap(gameStatus)
   }
 
 }

@@ -4,20 +4,20 @@ import de.htwg.se.connectfour.mvc.model.types.CellType
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 /**
-  * Gaming 2D grid with starting coordinates in left upper corner.
-  *
-  * Let's have grid size 3x2, X on position [2,0] and O on [1,1]:
-  *
-  * |   |   | X |
-  * +---+---+---+
-  * |   | O |   |
-  * +---+---+---+
-  * | 0 | 1 | 2 |
-  *
-  * @param columns represents width of grid (x coordinate, from 0 to columns - 1)
-  * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)
-  *
-  */
+ * Gaming 2D grid with starting coordinates in left upper corner.
+ *
+ * Let's have grid size 3x2, X on position [2,0] and O on [1,1]:
+ *
+ * |   |   | X |
+ * +---+---+---+
+ * |   | O |   |
+ * +---+---+---+
+ * | 0 | 1 | 2 |
+ *
+ * @param columns represents width of grid (x coordinate, from 0 to columns - 1)
+ * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)
+ *
+ */
 class GridImpl(val columns: Int, val rows: Int) extends Grid {
 
   override val MAX_COLUMN: Int = columns - 1
