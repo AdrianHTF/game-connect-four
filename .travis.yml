@@ -1,8 +1,7 @@
 language: scala
-scala:
-   - 2.11.8
+scala: 2.11.8
 script: "sbt clean coverage test"
-after_success: "sbt coverageReport coveralls"
+#after_success: "sbt coverageReport coveralls"
 
 # source: https://github.com/scoverage/sbt-coveralls
 #script:
