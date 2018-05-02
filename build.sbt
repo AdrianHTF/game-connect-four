@@ -1,4 +1,4 @@
-// akka source: https://alvinalexander.com/scala/simple-scala-akka-actor-examples-hello-world-actors
+// akka source: https://stackoverflow.com/questions/46313724/noclassdeffounderror-gentraversableonceclass-with-akka
 
 name := "Connect four game"
 organization := "de.htwg.se"
@@ -28,7 +28,7 @@ libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
 libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
 
-libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.2-M1"
+libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.4"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 

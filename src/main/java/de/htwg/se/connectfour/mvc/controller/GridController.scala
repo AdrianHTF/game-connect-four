@@ -1,22 +1,29 @@
 package de.htwg.se.connectfour.mvc.controller
 
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.controller.logic.{ CheckWinner, PlayedCommand, RevertManager, Validator }
-import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
+import de.htwg.se.connectfour.mvc.controller.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
-import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
-
-import akka.actor.Actor
-import akka.actor.Props
-import akka.event.Logging
-
+import de.htwg.se.connectfour.mvc.model.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging with Actor {
+case class Move (col:Int, row:Int,ct:CellType, grid:Grid)
+
+class GridControllerActor extends Actor {
+  def receive = {
+    case Move(col, row ,ct, grid) => {
+      println("\n &&&&&&& Move received. col = " + col + ", type = " + ct.toString + "\n")
+      grid.set(col, row, ct)
+    }
+  }
+}
+
+case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
 
   private var revertManager: RevertManager = _
 
@@ -26,9 +33,16 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   private var validator: Validator = _
   private var _gameFinished = false
 
-  val log = Logging(context.system, this)
+  private var _system: ActorSystem = _
+  private var _actor: ActorRef = _
 
   createEmptyGrid(columns, rows)
+
+  override def setActorSystem(system: ActorSystem): Unit = {
+    _system = system
+    _actor = _system.actorOf(Props[GridControllerActor], "GridControllerActor")
+    println("\n ####### _actor null? " + (_actor == null) + "\n")
+  }
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
     logger.debug("created empty grids")
@@ -79,7 +93,9 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   private def addCell(column: Int, cellType: CellType): Unit = {
     logger.info("added cell of type " + cellType + " at: " + column)
-    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
+    //revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
+    val move = new Move(column, validator.lastRowPosition(column),cellType, _grid)
+    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid), _actor, move)
     gameStatus = StatusType.SET
     publish(new PlayerGridChanged)
   }
@@ -128,9 +144,4 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   override def gameFinished: Boolean = _gameFinished
 
   override def grid: Grid = _grid
-
-  override def receive: Receive = {
-    case "test" => log.info("received test")
-    case _ => log.info("received unknown message")
-  }
 }

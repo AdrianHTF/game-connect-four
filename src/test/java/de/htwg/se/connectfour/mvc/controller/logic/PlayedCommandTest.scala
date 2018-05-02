@@ -6,6 +6,7 @@ import org.specs2.mutable.Specification
 
 
 class PlayedCommandTest extends Specification {
+/*
   "A played column" should {
     val grid = new GridImpl(2, 3)
     val playedColumn = PlayedCommand(0, 0, CellType.FIRST, grid)
@@ -20,5 +21,5 @@ class PlayedCommandTest extends Specification {
       grid.cell(1, 1).cellType must be_==(CellType.FIRST)
     }
   }
-
+*/
 }

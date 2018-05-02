@@ -1,6 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{ Cell, Grid }
+import akka.actor.ActorSystem
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 import scala.swing.Publisher
@@ -31,6 +32,8 @@ trait Controller extends Publisher {
   def gameFinished: Boolean
 
   def grid: Grid
+
+  def setActorSystem(actorSystem: ActorSystem): Unit
 }
 
 class PlayerGridChanged extends Event
