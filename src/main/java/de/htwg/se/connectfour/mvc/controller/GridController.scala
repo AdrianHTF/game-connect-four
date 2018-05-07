@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.connectfour.Main
 import de.htwg.se.connectfour.mvc.controller.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
@@ -12,13 +13,13 @@ import de.htwg.se.connectfour.mvc.model.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class Move (col:Int, row:Int,ct:CellType, grid:Grid)
+case class Move (col:Int, ct:CellType, gridController:Controller)
 
-class GridControllerActor extends Actor {
+class GridControllerActor extends Actor with LazyLogging {
   def receive = {
-    case Move(col, row ,ct, grid) => {
-      println("\n &&&&&&& Move received. col = " + col + ", type = " + ct.toString + "\n")
-      grid.set(col, row, ct)
+    case Move(col, ct, gridController) => {
+      logger.info("GridControllerActor Move received. col = " + col + ", type = " + ct.toString)
+      gridController.checkAddCell(col, ct);
     }
   }
 }
@@ -34,18 +35,17 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   private var _gameFinished = false
 
   private var _system: ActorSystem = _
-  private var _actor: ActorRef = _
+  var actor: ActorRef = _
 
   createEmptyGrid(columns, rows)
 
   override def setActorSystem(system: ActorSystem): Unit = {
     _system = system
-    _actor = _system.actorOf(Props[GridControllerActor], "GridControllerActor")
-    println("\n ####### _actor null? " + (_actor == null) + "\n")
+    actor = _system.actorOf(Props[GridControllerActor], "GridControllerActor")
   }
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
-    logger.debug("created empty grids")
+    if (Main.debug.filter) logger.debug("created empty grids")
     _grid = new GridImpl(columns, rows)
     _gameFinished = false
     revertManager = new RevertManager
@@ -84,6 +84,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   override def statusText: String = StatusType.message(gameStatus)
 
   override def checkAddCell(column: Int, cellType: CellType): Unit = {
+    if (Main.debug.filter) logger.info("checkAddCell. isInvalid? " + isInvalid(column))
     if (isInvalid(column)) return
     addCell(column, cellType)
     checkFinish(column)
@@ -92,10 +93,9 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   private def isInvalid(column: Int) = gameFinished || isColumnFull(column) || !isColumnValid(column)
 
   private def addCell(column: Int, cellType: CellType): Unit = {
-    logger.info("added cell of type " + cellType + " at: " + column)
-    //revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
-    val move = new Move(column, validator.lastRowPosition(column),cellType, _grid)
-    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid), _actor, move)
+    logger.info("addCell-method of type " + cellType + " at: " + column)
+    //val move = Move(column, validator.lastRowPosition(column),cellType, this)
+    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
     gameStatus = StatusType.SET
     publish(new PlayerGridChanged)
   }
@@ -127,7 +127,10 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   private def checkFinish(columnMove: Int): Unit = {
     val rowMove = validator.lastRowPosition(columnMove)
+    if (Main.debug.filter) logger.info("checkFinish(). columnMove = " + columnMove + ", rowMove = " + rowMove)
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
+    if (Main.debug.filter) logger.info("checkFinish hasWon = " + hasWon)
+
     if (hasWon) {
       logger.info("game has finished")
       gameStatus = StatusType.FINISHED

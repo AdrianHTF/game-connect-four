@@ -1,21 +1,22 @@
 package de.htwg.se.connectfour.mvc.controller.logic
 
 import akka.actor.ActorRef
+import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.connectfour.Main
 import de.htwg.se.connectfour.mvc.controller.Move
 import de.htwg.se.connectfour.mvc.model.types.CellType
 
-class RevertManager {
+class RevertManager extends LazyLogging {
 
   private var undoStack: List[Command] = Nil
   private var redoStack: List[Command] = Nil
 
-  def execute(command: Command, actorRef: ActorRef, move: Move): Unit = {
+  def execute(command: Command): Unit = {
     undoStack = command :: undoStack
     redoStack = Nil
-    println("\n ******* actorRef null? " + (actorRef == null) + "\n")
+    if (Main.debug.filter) logger.info("RevertManager.execute()")
 
-    actorRef ! move
-    //command.execute()
+    command.execute()
   }
 
   def undo(): Boolean = {

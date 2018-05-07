@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
@@ -34,6 +34,8 @@ trait Controller extends Publisher {
   def grid: Grid
 
   def setActorSystem(actorSystem: ActorSystem): Unit
+
+  var actor:ActorRef
 }
 
 class PlayerGridChanged extends Event

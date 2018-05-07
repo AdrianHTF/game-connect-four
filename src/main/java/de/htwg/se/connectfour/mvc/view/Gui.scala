@@ -2,19 +2,19 @@ package de.htwg.se.connectfour.mvc.view
 
 import java.awt.Color
 
-import de.htwg.se.connectfour.mvc.controller.{ Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon }
-import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
+import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.connectfour.mvc.controller._
+import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.mvc.model.types.CellType
 
-import scala.swing.event.{ ButtonClicked, Key }
-import scala.swing.{ Action, BorderPanel, Button, CheckBox, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField }
+import scala.swing.event.{ButtonClicked, Key}
+import scala.swing._
 
-case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame {
+case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame with LazyLogging{
 
   val columns: Int = controller.columns
   val rows: Int = controller.rows
   val statusLine = new TextField(controller.statusText, 20)
-  val isOpponentRealBox = new CheckBox("Real player")
 
   val blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
@@ -31,7 +31,6 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
   setupMainFrame()
   setupReactions
   listenTo(controller)
-  listenTo(isOpponentRealBox)
 
   def setupMainFrame(): Unit = {
     val WIDTH = 700
@@ -78,7 +77,6 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       contents += new MenuItem(Action("Redo") {
         controller.redo()
       })
-      contents += isOpponentRealBox
     }
   }
 
@@ -90,23 +88,18 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       case _: Draw => showDraw()
       case _: FilledColumn => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
       case _: InvalidMove => redraw()
-      case ButtonClicked(`isOpponentRealBox`) => startNewGame()
     }
   }
 
   def buttonAction(chosenColumn: Int): Unit = {
-    gamingPlayers.applyTurn(chosenColumn)
-    playBotIfGoing()
-  }
 
-  def playBotIfGoing(): Unit = {
-    if (!gamingPlayers.currentPlayer.isReal) {
-      val robotsColumn = gamingPlayers.currentPlayer.playTurn()
-      gamingPlayers.applyTurn(robotsColumn)
-    }
+    logger.info("buttonAction cellTyp: " + gamingPlayers.currentPlayerCellType + " current Player: " + gamingPlayers.currentPlayer)
+    val move = Move(chosenColumn, gamingPlayers.currentPlayerCellType, controller)
+    controller.actor ! move
   }
 
   def redraw(): Unit = {
+    logger.info("Gui.redraw() called")
     for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
     statusLine.text = controller.statusText
   }
@@ -137,7 +130,7 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
 
   def startNewGame(): Unit = {
     controller.createEmptyGrid(controller.columns, controller.rows)
-    val secondPlayer = if (isOpponentRealBox.selected) RealPlayer("David") else RandomBotPlayer(controller)
+    val secondPlayer = RealPlayer("David")
     gamingPlayers.setSecondPlayer(secondPlayer)
   }
 

@@ -1,6 +1,7 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.{ Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon }
+import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 
 import scala.io.StdIn
 import scala.swing.Reactor
@@ -9,7 +10,7 @@ import scala.swing.Reactor
  * Represents text user interface.
  * Whenever player plays turn,
  */
-case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Reactor {
+case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Reactor with LazyLogging {
 
   listenTo(controller)
   reactions += {
@@ -48,6 +49,7 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
         case "help" => println("Commands are: help, new <num> <num>, quit, undo <num>, redo <num>, show, <num> <num>, <num>")
 
         case _ => if (!controller.gameFinished) {
+          logger.info("Tui.processInputLine: !controller.gameFinished")
           gamingPlayers.applyTurn(parsedInput(0).toInt)
         } else showFinished()
       }

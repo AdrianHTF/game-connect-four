@@ -6,10 +6,15 @@ import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
+import scalaz.std.int
 
 import scala.io.StdIn
 
 object Main extends LazyLogging {
+
+  object debug {
+    def filter = false
+  }
 
   class ServerActor extends Actor {
     def receive = {
@@ -29,22 +34,26 @@ object Main extends LazyLogging {
       val controller = injector.getInstance(classOf[Controller])
       val player1 = RealPlayer("Marek")
       val player2 = RandomBotPlayer(controller)
-      val players = new GamingPlayers(player1, player2, controller)
-
       controller.setActorSystem(system);
+      val players = new GamingPlayers(player1, player2, controller, controller.actor)
+
       startGame(controller, players)
     }
 
     def startGame(controller: Controller, players: GamingPlayers): Unit = {
 
+      Gui(controller, players)
+
+      /*
       Console.print("Do you want to start gui (y/n): ")
       val input = StdIn.readLine()
       if (input.equalsIgnoreCase("y")) {
-        logger.info("started GUI")
+        if (Main.debug.filter) logger.info("started GUI")
         Gui(controller, players)
       } else {
-        logger.info("started TUI")
+        if (Main.debug.filter) logger.info("started TUI")
         Tui(controller, players)
     }
+    */
   }
 }
