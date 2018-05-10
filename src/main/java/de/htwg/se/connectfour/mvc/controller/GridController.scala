@@ -18,7 +18,7 @@ case class Move (col:Int, ct:CellType, gridController:Controller)
 class GridControllerActor extends Actor with LazyLogging {
   def receive = {
     case Move(col, ct, gridController) => {
-      logger.info("GridControllerActor Move received. col = " + col + ", type = " + ct.toString)
+      if (Main.debug.filter) logger.info("GridControllerActor Move received. col = " + col + ", type = " + ct.toString)
       gridController.checkAddCell(col, ct);
     }
   }
@@ -93,7 +93,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   private def isInvalid(column: Int) = gameFinished || isColumnFull(column) || !isColumnValid(column)
 
   private def addCell(column: Int, cellType: CellType): Unit = {
-    logger.info("addCell-method of type " + cellType + " at: " + column)
+    if (Main.debug.filter) logger.info("addCell-method of type " + cellType + " at: " + column)
     //val move = Move(column, validator.lastRowPosition(column),cellType, this)
     revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
     gameStatus = StatusType.SET

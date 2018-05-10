@@ -1,8 +1,12 @@
-# base image source: https://github.com/hseeberger/scala-sbt
+# Base image source: https://github.com/hseeberger/scala-sbt
 FROM hseeberger/scala-sbt
 
-# clone connect four game repository
+# Clone connect four game repository
 RUN git clone https://github.com/Schmork/game-connect-four.git /soar
-  
+RUN (cd /soar/ && sbt sbtVersion)
+
 # Define working directory
-WORKDIR /root
+WORKDIR /soar/
+
+# Start the game
+CMD (cd /soar/ && sbt run)

@@ -6,9 +6,6 @@ import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
-import scalaz.std.int
-
-import scala.io.StdIn
 
 object Main extends LazyLogging {
 

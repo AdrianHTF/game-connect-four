@@ -1,6 +1,7 @@
 package de.htwg.se.connectfour.mvc.view
 
 import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.connectfour.Main
 import de.htwg.se.connectfour.mvc.controller._
 
 import scala.io.StdIn
@@ -26,11 +27,10 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   processInputLine("new 7 6")
 
   while (true) {
-    while (!controller.gameFinished) {
-      val currentPlayer = gamingPlayers.currentPlayer
+
+    do {
       processInputLine(StdIn.readLine())
-    }
-    processInputLine(StdIn.readLine())
+    } while (!controller.gameFinished)
   }
 
   def processInputLine(input: String): Unit = {
@@ -45,7 +45,7 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
         case "help" => println("Commands are: help, new <num> <num>, quit, undo <num>, redo <num>, show, <num> <num>, <num>")
 
         case _ => if (!controller.gameFinished) {
-          logger.info("Tui.processInputLine: !controller.gameFinished")
+          if (Main.debug.filter) logger.info("Tui.processInputLine: !controller.gameFinished")
           val col = parsedInput(0).toInt;
           controller.actor ! Move(col, gamingPlayers.currentPlayerCellType, controller);
         } else showFinished()
@@ -91,5 +91,5 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
       + "please play again.")
   }
 
-  def quit(): Nothing = sys.exit(0)
+  def quit(): Unit = System.exit(0)
 }
