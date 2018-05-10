@@ -105,7 +105,7 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   }
 
   def lastCase(col: Int): Unit = {
-    if (col == -1) {
+    if (col == -1 || checkIfInputInRange(col)) {
       println("\n" +
         "please note the program's control for further information type 'help'" +
         "\n")
@@ -117,5 +117,9 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
     }
   }
 
+  def checkIfInputInRange(inputValue: Int): Boolean = {
+    if ((0 to (controller.grid.columns - 1)).contains(inputValue)) false
+    else true
+  }
 }
 
