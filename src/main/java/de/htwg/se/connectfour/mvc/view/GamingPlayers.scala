@@ -3,7 +3,7 @@ package de.htwg.se.connectfour.mvc.view
 import akka.actor.ActorRef
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
-import de.htwg.se.connectfour.mvc.controller.{Controller, Move, PlayerGridChanged}
+import de.htwg.se.connectfour.mvc.controller.{ Controller, Move, PlayerGridChanged }
 import de.htwg.se.connectfour.mvc.model.player.Player
 import de.htwg.se.connectfour.mvc.model.types
 import de.htwg.se.connectfour.mvc.model.types.CellType
@@ -11,7 +11,7 @@ import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 import scala.swing.Reactor
 
-class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: Controller, actor:ActorRef) extends Reactor with LazyLogging {
+class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: Controller, actor: ActorRef) extends Reactor with LazyLogging {
 
   listenTo(controller)
   reactions += {
@@ -41,8 +41,7 @@ class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: C
     if (player == firstPlayer) {
       if (Main.debug.filter) logger.info("cellType player: " + player.name.toString + " CellType.first")
       CellType.FIRST
-    }
-    else {
+    } else {
       if (Main.debug.filter) logger.info("cellType player: " + player.name.toString + " CellType.second")
       CellType.SECOND
     }

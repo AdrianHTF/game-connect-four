@@ -32,3 +32,4 @@ libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.5.4"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
+fork in (IntegrationTest, run) := true

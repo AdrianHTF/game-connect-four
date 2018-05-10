@@ -2,9 +2,9 @@ package de.htwg.se.connectfour.mvc.controller.logic
 
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
+import de.htwg.se.connectfour.mvc.model.{ Cell, Grid }
 
-case class CheckWinner(grid: Grid) extends LazyLogging{
+case class CheckWinner(grid: Grid) extends LazyLogging {
 
   val validator = Validator(grid)
 

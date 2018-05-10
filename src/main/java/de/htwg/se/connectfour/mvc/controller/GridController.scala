@@ -1,19 +1,19 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
-import de.htwg.se.connectfour.mvc.controller.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
+import de.htwg.se.connectfour.mvc.controller.logic.{ CheckWinner, PlayedCommand, RevertManager, Validator }
+import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
-import de.htwg.se.connectfour.mvc.model.types.{CellType, StatusType}
+import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
 
 import scala.swing.Publisher
 
-case class Move (col:Int, ct:CellType, gridController:Controller)
+case class Move(col: Int, ct: CellType, gridController: Controller)
 
 class GridControllerActor extends Actor with LazyLogging {
   def receive = {

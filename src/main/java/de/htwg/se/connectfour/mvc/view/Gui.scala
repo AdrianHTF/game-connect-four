@@ -4,13 +4,13 @@ import java.awt.Color
 
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.controller._
-import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
+import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
 import de.htwg.se.connectfour.mvc.model.types.CellType
 
-import scala.swing.event.{ButtonClicked, Key}
+import scala.swing.event.{ ButtonClicked, Key }
 import scala.swing._
 
-case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame with LazyLogging{
+case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame with LazyLogging {
 
   val columns: Int = controller.columns
   val rows: Int = controller.rows

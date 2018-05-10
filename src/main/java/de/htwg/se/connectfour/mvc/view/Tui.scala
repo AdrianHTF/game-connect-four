@@ -35,25 +35,17 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
 
   def processInputLine(input: String): Unit = {
     val parsedInput = input.split(" ")
-    try {
-      parsedInput(0) match {
-        case "quit" => quit()
-        case "new" => controller.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
-        case "undo" => 1 to parsedInput(1).toInt foreach { _ => controller.undo() }
-        case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
-        case "show" => showGridWithMessage()
-        case "help" => println("Commands are: help, new <num> <num>, quit, undo <num>, redo <num>, show, <num> <num>, <num>")
+    parsedInput(0) match {
+      case "quit" => quit()
+      case "new" => controller.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
+      case "undo" => 1 to parsedInput(1).toInt foreach { _ => controller.undo() }
+      case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
+      case "show" => showGridWithMessage()
+      case "help" => showHelp()
+      case _ =>
+        val col = toInt(parsedInput(0))
+        lastCase(col)
 
-        case _ => if (!controller.gameFinished) {
-          if (Main.debug.filter) logger.info("Tui.processInputLine: !controller.gameFinished")
-          val col = parsedInput(0).toInt;
-          controller.actor ! Move(col, gamingPlayers.currentPlayerCellType, controller);
-        } else showFinished()
-      }
-    } catch {
-      case e: Exception =>
-        println("Unknown command")
-        throw e
     }
   }
 
@@ -92,4 +84,38 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   }
 
   def quit(): Unit = System.exit(0)
+
+  def showHelp(): Unit = {
+    println("Commands are:\n" +
+      "help,\n" +
+      "new <num> <num>,\n" +
+      "quit,\n" +
+      "undo <num>,\n" +
+      "redo <num>,\n" +
+      "show,\n" +
+      "<num> for place draw")
+  }
+
+  def toInt(s: String): Int = {
+    try {
+      s.toInt
+    } catch {
+      case e: Exception => -1
+    }
+  }
+
+  def lastCase(col: Int): Unit = {
+    if (col == -1) {
+      println("\n" +
+        "please note the program's control for further information type 'help'" +
+        "\n")
+    } else {
+      if (!controller.gameFinished) {
+        if (Main.debug.filter) logger.info("Tui.processInputLine: !controller.gameFinished")
+        controller.actor ! Move(col, gamingPlayers.currentPlayerCellType, controller);
+      } else showFinished()
+    }
+  }
+
 }
+

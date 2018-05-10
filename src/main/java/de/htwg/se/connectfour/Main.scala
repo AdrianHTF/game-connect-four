@@ -1,11 +1,11 @@
 package de.htwg.se.connectfour
 
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.{ Actor, ActorSystem, Props }
 import com.google.inject.Guice
 import de.htwg.se.connectfour.mvc.controller.Controller
-import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
+import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
+import de.htwg.se.connectfour.mvc.view.{ GamingPlayers, Gui, Tui }
 
 object Main extends LazyLogging {
 
@@ -25,22 +25,22 @@ object Main extends LazyLogging {
 
   println()
 
-    def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
 
-      val injector = Guice.createInjector(new ConnectFourModule)
-      val controller = injector.getInstance(classOf[Controller])
-      val player1 = RealPlayer("Marek")
-      val player2 = RandomBotPlayer(controller)
-      controller.setActorSystem(system);
-      val players = new GamingPlayers(player1, player2, controller, controller.actor)
+    val injector = Guice.createInjector(new ConnectFourModule)
+    val controller = injector.getInstance(classOf[Controller])
+    val player1 = RealPlayer("Marek")
+    val player2 = RandomBotPlayer(controller)
+    controller.setActorSystem(system);
+    val players = new GamingPlayers(player1, player2, controller, controller.actor)
 
-      startGame(controller, players)
-    }
+    startGame(controller, players)
+  }
 
-    def startGame(controller: Controller, players: GamingPlayers): Unit = {
-      Tui(controller, players)
+  def startGame(controller: Controller, players: GamingPlayers): Unit = {
+    Tui(controller, players)
 
-      /*
+    /*
       Console.print("Do you want to start gui (y/n): ")
       val input = StdIn.readLine()
       if (input.equalsIgnoreCase("y")) {

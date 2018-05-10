@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import akka.actor.{ActorRef, ActorSystem}
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
+import akka.actor.{ ActorRef, ActorSystem }
+import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 class MockController extends Controller {
@@ -36,5 +36,5 @@ class MockController extends Controller {
 
   override def setActorSystem(actorSystem: ActorSystem): Unit = ???
 
-  var actor:ActorRef = ???
+  var actor: ActorRef = ???
 }
