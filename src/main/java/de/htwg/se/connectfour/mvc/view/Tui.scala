@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.view
 
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
+import de.htwg.se.connectfour.mvc.controller._
 
 import scala.io.StdIn
 import scala.swing.Reactor
@@ -28,11 +28,7 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   while (true) {
     while (!controller.gameFinished) {
       val currentPlayer = gamingPlayers.currentPlayer
-      if (currentPlayer.isReal) {
-        processInputLine(StdIn.readLine())
-      } else {
-        processInputLine(currentPlayer.playTurn().toString)
-      }
+      processInputLine(StdIn.readLine())
     }
     processInputLine(StdIn.readLine())
   }
@@ -50,7 +46,8 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
 
         case _ => if (!controller.gameFinished) {
           logger.info("Tui.processInputLine: !controller.gameFinished")
-          gamingPlayers.applyTurn(parsedInput(0).toInt)
+          val col = parsedInput(0).toInt;
+          controller.actor ! Move(col, gamingPlayers.currentPlayerCellType, controller);
         } else showFinished()
       }
     } catch {

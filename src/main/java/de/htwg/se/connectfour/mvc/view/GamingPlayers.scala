@@ -30,16 +30,6 @@ class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: C
     _isFirstGoing = !_isFirstGoing
   }
 
-  def applyTurn(column: Int): Unit = {
-
-    //controller.checkAddCell(column, currentPlayerCellType)
-    /*
-    val move = Move(column, currentPlayerCellType, controller)
-    logger.info("applyTurn() current player: " + currentPlayer.toString + ", column: " + column)
-    actor ! move
-    */
-  }
-
   def setSecondPlayer(second: Player): Unit = {
     secondPlayer = second
   }
