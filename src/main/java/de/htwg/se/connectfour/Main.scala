@@ -41,8 +41,7 @@ object Main extends LazyLogging {
     }
 
     def startGame(controller: Controller, players: GamingPlayers): Unit = {
-
-      Gui(controller, players)
+      Tui(controller, players)
 
       /*
       Console.print("Do you want to start gui (y/n): ")
