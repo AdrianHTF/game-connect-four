@@ -35,6 +35,8 @@ trait Controller extends Publisher {
 
   def setActorSystem(actorSystem: ActorSystem): Unit
 
+  def gridToHtml: String = grid.toHtml
+
   var actor: ActorRef
 }
 

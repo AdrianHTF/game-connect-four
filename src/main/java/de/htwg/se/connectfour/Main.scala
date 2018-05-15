@@ -1,11 +1,11 @@
 package de.htwg.se.connectfour
 
-import akka.actor.{ Actor, ActorSystem, Props }
+import akka.actor.{Actor, ActorSystem, Props}
 import com.google.inject.Guice
 import de.htwg.se.connectfour.mvc.controller.Controller
-import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
+import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.view.{ GamingPlayers, Gui, Tui }
+import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, HTTPServer, Tui}
 
 object Main extends LazyLogging {
 
@@ -38,7 +38,15 @@ object Main extends LazyLogging {
   }
 
   def startGame(controller: Controller, players: GamingPlayers): Unit = {
-    Tui(controller, players)
+
+    logger.info("starting")
+
+
+    val webServer = new HTTPServer(controller, players, system)
+
+    logger.info("started " + webServer)
+
+    //Tui(controller, players)
 
     /*
       Console.print("Do you want to start gui (y/n): ")
