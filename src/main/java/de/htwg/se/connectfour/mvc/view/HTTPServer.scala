@@ -19,7 +19,6 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
 
   val route: Route = get {
 
-    logger.info("route GET")
 
     pathSingleSlash {
       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "<h1>HTWG Connect-Four</h1>"))
@@ -48,18 +47,16 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
 
 
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-  logger.info("hi")
+
 
   def gridtoHtml: StandardRoute = {
 
-    logger.info("gridToHtml")
 
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>HTWG Connect-Four</h1>" + controller.gridToHtml))
   }
 
   def unbind = {
 
-    logger.info("unbind")
 
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port
@@ -68,7 +65,6 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
 
   def processInputLine(input: String): Unit = {
 
-    logger.info("processInputLine")
 
     val column = input.toInt
     controller.actor ! Move(column, gamingPlayers.currentPlayerCellType, controller)
