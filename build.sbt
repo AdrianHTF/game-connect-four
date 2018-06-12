@@ -23,7 +23,12 @@ libraryDependencies ++= {
     "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
     "org.json4s"        %% "json4s-native"   % Json4sVersion,
     "org.json4s"        %% "json4s-ext"      % Json4sVersion,
-    "com.typesafe.akka" %% "akka-http" % "10.0.0"
+    "com.typesafe.akka" %% "akka-http" % "10.0.0",
+    "com.typesafe.akka" %% "akka-stream" % "2.5.11",
+    "com.typesafe.akka" %% "akka-cluster" % "2.5.11",
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3",
+    "com.h2database" % "h2" % "1.4.197"
+    //"org.slf4j" % "slf4j-nop" % "1.6.4"
   )
 }
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
