@@ -45,7 +45,13 @@ object Main extends LazyLogging {
 
     logger.info("starting")
 
-    val x = MySlick.create(RealPlayer("alkdf"))
+
+    val player = RealPlayer("Dave")
+    val player1 = RealPlayer("asklödj")
+    val x = MySlick.create(player)
+    val y = MySlick.create(player1)
+    println("db read 1: " + MySlick.read(x))
+    println("db read 2: " + MySlick.read(y))
     //val db = Database.forConfig("database");
 
     //val webServer = new HTTPServer(controller, players, system)
