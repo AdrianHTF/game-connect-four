@@ -28,4 +28,5 @@ trait Grid {
   def toString: String
 
   def toHtml: String
+
 }

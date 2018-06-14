@@ -10,5 +10,17 @@ case class Cell(x: Int, y: Int, cellType: CellType) {
   }
 
   override def toString: String = cellType.toString
-
 }
+
+object Cell {
+  def toCellType (tp: String): CellType = {
+    if (tp.equals (" ") )
+      CellType.EMPTY
+    else if (tp.equals ("O") ) {
+      CellType.FIRST
+    }
+    else
+      CellType.SECOND
+  }
+}
+

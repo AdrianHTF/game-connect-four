@@ -27,7 +27,6 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   processInputLine("new 7 6")
 
   while (true) {
-
     do {
       processInputLine(StdIn.readLine())
     } while (!controller.gameFinished)
@@ -47,7 +46,6 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
       case _ =>
         val col = toInt(parsedInput(0))
         lastCase(col)
-
     }
   }
 
@@ -58,7 +56,7 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
 
   def showMessage(): Unit = {
     println(controller.statusText)
-    println("Player " + gamingPlayers.previousPlayer + " (" + gamingPlayers.prevPlayerCellType + ")"
+    println("Player " + gamingPlayers.currentPlayer + " (" + gamingPlayers.currentPlayerCellType + ")"
       + " played turn.")
   }
 

@@ -10,6 +10,7 @@ import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
 import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
+import de.htwg.se.connectfour.mvc.persistence.CellDB
 
 import scala.swing.Publisher
 
@@ -25,6 +26,8 @@ class GridControllerActor extends Actor with LazyLogging {
 }
 
 case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
+
+  val cellDB = CellDB
 
   private var revertManager: RevertManager = _
 
@@ -79,7 +82,18 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     }
   }
 
-  override def saveGame(): Unit = ???
+  override def saveGame(): Unit = {
+    var x = 0
+    for(x <- 0 to grid.columns - 1) {
+
+      var y = 0
+      for(y <- 0 to grid.rows - 1) {
+        cellDB.create(grid.cell(x, y))
+        val cellType = grid.cell(x,y).cellType.toString
+        logger.info(s"Saved cell $x, $y ($cellType)")
+      }
+    }
+  }
 
   override def loadGame(): Unit = ???
 

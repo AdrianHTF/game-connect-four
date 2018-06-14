@@ -7,5 +7,4 @@ trait Dao[DATA, ID] {
 
   def read(id: ID): DATA
 
-  def delete(id: ID)
 }
