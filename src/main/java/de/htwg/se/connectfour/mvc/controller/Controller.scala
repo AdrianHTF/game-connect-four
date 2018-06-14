@@ -19,6 +19,10 @@ trait Controller extends Publisher {
 
   def redo(): Unit
 
+  def saveGame(): Unit
+
+  def loadGame(): Unit
+
   def cell(col: Int, row: Int): Cell
 
   def statusText: String

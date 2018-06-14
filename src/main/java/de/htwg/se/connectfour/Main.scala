@@ -11,6 +11,8 @@ import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, HTTPServer, Tui}
 import de.htwg.se.connectfour.mvc.persistence.MySlick
 import de.htwg.se.connectfour._
 
+import scala.io.StdIn
+
 object Main extends LazyLogging {
 
   object debug {
@@ -33,12 +35,21 @@ object Main extends LazyLogging {
 
     val injector = Guice.createInjector(new ConnectFourModule)
     val controller = injector.getInstance(classOf[Controller])
-    val player1 = RealPlayer("Marek")
-    val player2 = RandomBotPlayer(controller)
+    val player1 = RealPlayer(getPlayersName("Player 1"))
+    val player2 = RealPlayer(getPlayersName("Player 2"))
     controller.setActorSystem(system);
     val players = new GamingPlayers(player1, player2, controller, controller.actor)
 
     startGame(controller, players)
+  }
+
+  def getPlayersName(player: String): String ={
+    println(player + " Please insert Name\n")
+    val playername = StdIn.readLine().toString
+    if (playername != null)
+      playername
+    else 
+      getPlayersName(player)
   }
 
   def startGame(controller: Controller, players: GamingPlayers): Unit = {

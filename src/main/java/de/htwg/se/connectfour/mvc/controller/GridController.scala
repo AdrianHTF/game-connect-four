@@ -79,6 +79,10 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     }
   }
 
+  override def saveGame(): Unit = ???
+
+  override def loadGame(): Unit = ???
+
   override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)
 
   override def statusText: String = StatusType.message(gameStatus)
