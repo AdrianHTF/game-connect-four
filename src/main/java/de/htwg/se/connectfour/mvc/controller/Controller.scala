@@ -19,6 +19,10 @@ trait Controller extends Publisher {
 
   def redo(): Unit
 
+  def saveGame(): Unit
+
+  def loadGame(): Unit
+
   def cell(col: Int, row: Int): Cell
 
   def statusText: String
@@ -34,6 +38,8 @@ trait Controller extends Publisher {
   def grid: Grid
 
   def setActorSystem(actorSystem: ActorSystem): Unit
+
+  def gridToHtml: String = grid.toHtml
 
   var actor: ActorRef
 }

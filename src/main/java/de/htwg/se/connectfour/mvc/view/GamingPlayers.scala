@@ -37,6 +37,8 @@ class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: C
 
   def currentPlayerCellType: CellType = cellType(currentPlayer)
 
+  def prevPlayerCellType: CellType = cellType(previousPlayer)
+
   private[this] def cellType(player: Player): CellType = {
     if (player == firstPlayer) {
       if (Main.debug.filter) logger.info("cellType player: " + player.name.toString + " CellType.first")

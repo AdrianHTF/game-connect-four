@@ -20,6 +20,10 @@ class MockController extends Controller {
 
   override def redo(): Unit = {}
 
+  override def saveGame(): Unit = ???
+
+  override def loadGame(): Unit = ???
+
   override def cell(col: Int, row: Int): Cell = new Cell(col, row)
 
   override def statusText: String = "Sample text"

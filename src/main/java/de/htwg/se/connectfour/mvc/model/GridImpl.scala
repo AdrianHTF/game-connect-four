@@ -77,4 +77,5 @@ class GridImpl(val columns: Int, val rows: Int) extends Grid {
     result
   }
 
+  override def toHtml: String = "<p  style=\"font-family:'Lucida Console', monospace\"> " + toString.replace("\n", "<br>").replace("  ", " _") + "</p>"
 }

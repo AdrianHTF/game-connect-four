@@ -27,7 +27,6 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   processInputLine("new 7 6")
 
   while (true) {
-
     do {
       processInputLine(StdIn.readLine())
     } while (!controller.gameFinished)
@@ -42,10 +41,11 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
       case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
       case "show" => showGridWithMessage()
       case "help" => showHelp()
+      case "save" => controller.saveGame
+      case "load" => controller.loadGame()
       case _ =>
         val col = toInt(parsedInput(0))
         lastCase(col)
-
     }
   }
 
@@ -93,6 +93,8 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
       "undo <num>,\n" +
       "redo <num>,\n" +
       "show,\n" +
+      "save,\n" +
+      "load,\n" +
       "<num> for place draw")
   }
 

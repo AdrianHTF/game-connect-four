@@ -1,11 +1,14 @@
 package de.htwg.se.connectfour
 
-import akka.actor.{ Actor, ActorSystem, Props }
+import akka.actor.{Actor, ActorSystem, Props}
 import com.google.inject.Guice
 import de.htwg.se.connectfour.mvc.controller.Controller
-import de.htwg.se.connectfour.mvc.model.player.{ RandomBotPlayer, RealPlayer }
+import de.htwg.se.connectfour.mvc.model.player.RealPlayer
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.view.{ GamingPlayers, Gui, Tui }
+import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, HTTPServer, Tui}
+import de.htwg.se.connectfour.mvc.persistence.PlayerDB
+
+import scala.io.StdIn
 
 object Main extends LazyLogging {
 
@@ -29,15 +32,35 @@ object Main extends LazyLogging {
 
     val injector = Guice.createInjector(new ConnectFourModule)
     val controller = injector.getInstance(classOf[Controller])
-    val player1 = RealPlayer("Marek")
-    val player2 = RandomBotPlayer(controller)
     controller.setActorSystem(system);
+    val player1 = getPlayersName("Player 1")
+    val player2 = getPlayersName("Player 2")
     val players = new GamingPlayers(player1, player2, controller, controller.actor)
 
     startGame(controller, players)
   }
 
+  def getPlayersName(player: String): RealPlayer ={
+    println(player + " Please insert Name\n")
+    val playername = StdIn.readLine().toString
+    if (playername != null) {
+      val realPlayer = RealPlayer(playername)
+      PlayerDB.create(realPlayer)
+      realPlayer
+    }
+    else
+      getPlayersName(player)
+  }
+
   def startGame(controller: Controller, players: GamingPlayers): Unit = {
+
+    logger.info("starting")
+
+    var i = 0
+    for(i <- 1 to 2) {
+      logger.info(s"DB Player $i: ${PlayerDB.read(i)}")
+    }
+
     Tui(controller, players)
 
     /*

@@ -5,4 +5,6 @@ object CellType extends Enumeration {
   val EMPTY = Value(" ")
   val FIRST = Value("O")
   val SECOND = Value("X")
+
+
 }

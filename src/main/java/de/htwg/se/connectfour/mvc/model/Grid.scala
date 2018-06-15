@@ -26,4 +26,7 @@ trait Grid {
   def isFull: Boolean
 
   def toString: String
+
+  def toHtml: String
+
 }
