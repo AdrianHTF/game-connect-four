@@ -57,8 +57,8 @@ object Main extends LazyLogging {
     logger.info("starting")
 
     var i = 0
-    for(i <- 1 to 2) {
-      logger.info(s"DB Player $i: ${PlayerDB.read(i)}")
+    for(i <- 0 to 1) {
+      logger.info(s"DB Player $i: ${PlayerDB.read.apply(i)}")
     }
 
     Tui(controller, players)

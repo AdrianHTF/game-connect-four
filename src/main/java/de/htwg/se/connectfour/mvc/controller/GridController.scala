@@ -42,6 +42,11 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   createEmptyGrid(columns, rows)
 
+  object cells {
+    val cells = cellDB.read
+    //cells
+  }
+
   override def setActorSystem(system: ActorSystem): Unit = {
     _system = system
     actor = _system.actorOf(Props[GridControllerActor], "GridControllerActor")
@@ -83,19 +88,41 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   }
 
   override def saveGame(): Unit = {
-    var x = 0
-    for(x <- 0 to grid.columns - 1) {
-
-      var y = 0
-      for(y <- 0 to grid.rows - 1) {
-        cellDB.create(grid.cell(x, y))
-        val cellType = grid.cell(x,y).cellType.toString
-        logger.info(s"Saved cell $x, $y ($cellType)")
-      }
+    var count = 0
+    for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
+      cellDB.create(grid.cell(row, column))
+      val cellType = grid.cell(row, column).cellType.toString
+      //logger.info(s"Saved cell #$count: $row, $column ($cellType)")
+      count += 1
     }
+    logger.info(s"Saved $count cells")
   }
 
-  override def loadGame(): Unit = ???
+  override def loadGame(): Unit = {
+
+    val cells = cellDB.read
+
+    val width = cells.map(_.x).max + 2
+    val height = cells.map(_.y).max + 2
+    createEmptyGrid(height, width)
+
+    var count = 0
+    cells.foreach(cell => {
+      grid.set(cell.x, cell.y, cell.cellType)
+      //logger.info(s"Cell #$count loaded: ${cell.x}, ${cell.y}, ${cell.cellType}")
+      count += 1
+    })
+    gameStatus = StatusType.SET
+
+    logger.info(s"Loaded Grid of size $width, $height ($count cells)")
+
+    publish(new GridChanged)
+
+    val player1moves = cells.count(cell => cell.cellType == CellType.FIRST)
+    val player2moves = cells.count(cell => cell.cellType == CellType.SECOND)
+
+    if (player2moves < player1moves) publish(new PlayerGridChanged)
+  }
 
   override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)
 
