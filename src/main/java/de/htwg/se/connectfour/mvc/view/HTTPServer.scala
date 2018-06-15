@@ -21,18 +21,18 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
     pathSingleSlash {
       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "<h1>HTWG Connect-Four</h1>"))
     }
-    path("") {
+    path("cf") {
       gridtoHtml
     } ~
-      path("new") {
+      path("cf" / "new") {
         controller.createEmptyGrid(7, 6)
         gridtoHtml
       } ~
-      path("undo") {
+      path("cf" / "undo") {
         controller.undo
         gridtoHtml
       } ~
-      path("redo") {
+      path("cf" / "redo") {
         controller.redo
         gridtoHtml
       } ~
@@ -44,12 +44,13 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
       }
   }
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
 
   def gridtoHtml: StandardRoute = {
 
     complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>HTWG Connect-Four</h1>" + controller.gridToHtml))
   }
+
+  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
 
   def unbind = {
 
@@ -59,7 +60,6 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
   }
 
   def processInputLine(input: String): Unit = {
-
     val column = input.toInt
     controller.actor ! Move(column, gamingPlayers.currentPlayerCellType, controller)
   }

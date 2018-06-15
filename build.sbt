@@ -23,7 +23,7 @@ libraryDependencies ++= {
     "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
     "org.json4s"        %% "json4s-native"   % Json4sVersion,
     "org.json4s"        %% "json4s-ext"      % Json4sVersion,
-    "com.typesafe.akka" %% "akka-http" % "10.0.0",
+    "com.typesafe.akka" %% "akka-http" % "10.0.7",
     "com.typesafe.akka" %% "akka-stream" % "2.5.11",
     "com.typesafe.akka" %% "akka-cluster" % "2.5.11",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3",
