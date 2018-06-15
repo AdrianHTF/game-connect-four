@@ -39,13 +39,13 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
     val parsedInput = input.split(" ")
     parsedInput(0) match {
       case "quit" => quit()
-      case "new" => controller.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
-      case "undo" => 1 to parsedInput(1).toInt foreach { _ => controller.undo() }
-      case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
+      case "new" => controller.actor ! EmptyGrid(7, 6, controller)
+      case "undo" => controller.actor ! Undo(controller)
+      case "redo" => controller.actor ! Redo(controller)
       case "show" => showGridWithMessage()
       case "help" => showHelp()
-      case "save" => controller.saveGame
-      case "load" => controller.loadGame()
+      case "save" => controller.actor ! Save(controller)
+      case "load" => controller.actor ! Load(controller)
       case _ =>
         val col = toInt(parsedInput(0))
         lastCase(col)
@@ -91,10 +91,10 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
   def showHelp(): Unit = {
     println("Commands are:\n" +
       "help,\n" +
-      "new <num> <num>,\n" +
+      "new,\n" +
       "quit,\n" +
-      "undo <num>,\n" +
-      "redo <num>,\n" +
+      "undo,\n" +
+      "redo,\n" +
       "show,\n" +
       "save,\n" +
       "load,\n" +

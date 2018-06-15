@@ -15,12 +15,32 @@ import de.htwg.se.connectfour.mvc.persistence.CellDB
 import scala.swing.Publisher
 
 case class Move(col: Int, ct: CellType, gridController: Controller)
+case class EmptyGrid(columns: Int, rows: Int, gridController: Controller)
+case class Redo(gridController: Controller)
+case class Undo(gridController: Controller)
+case class Save(gridController: Controller)
+case class Load(gridController: Controller)
 
 class GridControllerActor extends Actor with LazyLogging {
   def receive = {
     case Move(col, ct, gridController) => {
       if (Main.debug.filter) logger.info("GridControllerActor Move received. col = " + col + ", type = " + ct.toString)
       gridController.checkAddCell(col, ct);
+    }
+    case Redo(gridController) => {
+      gridController.redo
+    }
+    case Undo(gridController) => {
+      gridController.undo
+    }
+    case Save(gridController) => {
+      gridController.saveGame
+    }
+    case Load(gridController) => {
+      gridController.loadGame
+    }
+    case EmptyGrid(columns, rows, gridController) => {
+      gridController.createEmptyGrid(columns, rows)
     }
   }
 }
@@ -79,9 +99,11 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     logger.info("redid move")
     val didRedo = revertManager.redo()
     if (didRedo) {
+      logger.info("if")
       gameStatus = StatusType.REDO
       publish(new PlayerGridChanged)
     } else {
+      logger.info("else")
       gameStatus = StatusType.INVALID
       publish(new InvalidMove)
     }
@@ -92,7 +114,6 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
       cellDB.create(grid.cell(row, column))
       val cellType = grid.cell(row, column).cellType.toString
-      //logger.info(s"Saved cell #$count: $row, $column ($cellType)")
       count += 1
     }
     logger.info(s"Saved $count cells")
@@ -109,7 +130,6 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     var count = 0
     cells.foreach(cell => {
       grid.set(cell.x, cell.y, cell.cellType)
-      //logger.info(s"Cell #$count loaded: ${cell.x}, ${cell.y}, ${cell.cellType}")
       count += 1
     })
     gameStatus = StatusType.SET
