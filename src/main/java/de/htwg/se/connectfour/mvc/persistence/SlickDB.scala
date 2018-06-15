@@ -12,16 +12,6 @@ import scala.util.{Failure, Success, Try}
 
 object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
 
-  case class PlayerData(name: String, id: Long = 0L)
-
-  class PlayerTable(tag: Tag) extends Table[PlayerData](tag, "PLAYERS") {
-    def name = column[String]("Playername")
-
-    def id = column[Long]("PlayerID", O.PrimaryKey, O.AutoInc)
-
-    def * = (name, id).mapTo[PlayerData]
-  }
-
   var playerQuery = TableQuery[PlayerTable]
   lazy val playerReturnValue = playerQuery returning playerQuery.map(_.id)
 
@@ -47,15 +37,7 @@ object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
 
 object CellDB extends Dao[Cell, Long] with LazyLogging {
 
-  case class CellData(x: Int, y: Int, cellType : String , id: Long = 0L)//, cellType: CellType)
 
-  class CellTable(tag: Tag) extends Table[CellData] (tag, _tableName = "CELLS") {
-    def x = column[Int]("X")
-    def y = column[Int]("Y")
-    def cellType = column[String]("TYPE")
-    def id = column[Long]("PlayerID", O.PrimaryKey, O.AutoInc)
-    def * = (x, y, cellType, id).mapTo[CellData]
-  }
 
   val connectionString = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"
   implicit val database = Database.forURL(connectionString, driver = "org.h2.Driver")
