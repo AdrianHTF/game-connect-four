@@ -8,7 +8,9 @@ import de.htwg.se.connectfour.mvc.model.Cell
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
+// PlayerDB *could* be used to save and load player names, but we don't use it yet.
 object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
+  type T = Long
 
   object playerQuery extends TableQuery[PlayerTable](tag ⇒ new PlayerTable(tag)) {
     def all = playerQuery.result
@@ -23,8 +25,8 @@ object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
     (playerQuery.schema).create)
   Await.result(database.run(setupPlayer), Duration.Inf)
 
-  override def create(player: RealPlayer): Long = {
-    val PlayerId: Long = Await.result(database.run(playerReturnValue += PlayerData(player.name)), Duration.Inf)
+  override def create(player: RealPlayer): T = {
+    val PlayerId: T = Await.result(database.run(playerReturnValue += PlayerData(player.name)), Duration.Inf)
     PlayerId
   }
 
@@ -33,6 +35,7 @@ object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
 }
 
 object CellDB extends Dao[Cell, Long] with LazyLogging {
+  type T = Long
 
   val connectionString = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"
   implicit val database = Database.forURL(connectionString, driver = "org.h2.Driver")
@@ -47,8 +50,8 @@ object CellDB extends Dao[Cell, Long] with LazyLogging {
     (cellQuery.schema).create)
     Await.result(database.run(setupCell), Duration.Inf)
 
-  override def create(cell: Cell): Long = {
-    val cellId: Long = Await.result(database.run(cellReturnValue += CellData(cell.x, cell.y, cell.cellType.toString)), Duration.Inf)
+  override def create(cell: Cell): T = {
+    val cellId: T = Await.result(database.run(cellReturnValue += CellData(cell.x, cell.y, cell.cellType.toString)), Duration.Inf)
     cellId
   }
 

@@ -5,7 +5,6 @@ import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
 import de.htwg.se.connectfour.mvc.controller.{ Controller, Move, PlayerGridChanged }
 import de.htwg.se.connectfour.mvc.model.player.Player
-import de.htwg.se.connectfour.mvc.model.types
 import de.htwg.se.connectfour.mvc.model.types.CellType
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 

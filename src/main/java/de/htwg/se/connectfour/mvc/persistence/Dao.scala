@@ -1,10 +1,9 @@
 package de.htwg.se.connectfour.mvc.persistence
 
-import scala.util.Try
-
 trait Dao[DATA, ID] {
-  def create(data: DATA): ID
+  type T
+
+  def create(data: DATA): T
 
   def read(): Seq[DATA]
-
 }
