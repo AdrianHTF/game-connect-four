@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.model.Cell
 import com.mongodb.casbah.MongoConnection
 import com.mongodb.casbah.commons.MongoDBObject
-
+import de.htwg.se.connectfour.mvc.model.types.CellType
 
 object MongoDB extends Dao[Cell, Long] with LazyLogging {
   type T = Unit
@@ -23,9 +23,21 @@ object MongoDB extends Dao[Cell, Long] with LazyLogging {
 
   override def read(): Seq[Cell] = {
 
+    /*
+    val seq = Seq.empty[Cell]//  Seq[Cell] = null
+
     for (dbCell <- mongoColl) {
       logger.info(dbCell.toString)
+
     }
-    ???
+    val i = 2
+    */
+
+    val seq = mongoColl.map(item => Cell(1, 1, CellType.EMPTY))
+
+
+
+    logger.info(s"Mongo read returning ${seq.size} cells")
+    seq.toSeq
   }
 }

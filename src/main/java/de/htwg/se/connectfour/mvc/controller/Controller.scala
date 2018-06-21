@@ -23,6 +23,10 @@ trait Controller extends Publisher {
 
   def loadGame(): Unit
 
+  def saveGameM(): Unit
+
+  def loadGameM(): Unit
+
   def cell(col: Int, row: Int): Cell
 
   def statusText: String

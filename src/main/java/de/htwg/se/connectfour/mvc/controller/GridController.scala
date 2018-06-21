@@ -1,16 +1,16 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
-import de.htwg.se.connectfour.mvc.controller.logic.{ CheckWinner, PlayedCommand, RevertManager, Validator }
-import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
+import de.htwg.se.connectfour.mvc.controller.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
-import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
-import de.htwg.se.connectfour.mvc.persistence.Slick_CellDB
+import de.htwg.se.connectfour.mvc.model.types.{CellType, StatusType}
+import de.htwg.se.connectfour.mvc.persistence.{MongoDB, Slick_CellDB}
 
 import scala.swing.Publisher
 
@@ -20,6 +20,9 @@ case class Redo(gridController: Controller)
 case class Undo(gridController: Controller)
 case class Save(gridController: Controller)
 case class Load(gridController: Controller)
+case class SaveM(gridController: Controller)
+case class LoadM(gridController: Controller)
+
 
 class GridControllerActor extends Actor with LazyLogging {
   def receive = {
@@ -39,6 +42,12 @@ class GridControllerActor extends Actor with LazyLogging {
     case Load(gridController) => {
       gridController.loadGame
     }
+    case SaveM(gridController) => {
+      gridController.saveGameM
+    }
+    case LoadM(gridController) => {
+      gridController.loadGameM
+    }
     case EmptyGrid(columns, rows, gridController) => {
       gridController.createEmptyGrid(columns, rows)
     }
@@ -47,7 +56,8 @@ class GridControllerActor extends Actor with LazyLogging {
 
 case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
 
-  val cellDB = Slick_CellDB
+  val Slick_cellDB = Slick_CellDB
+  val Mongo_cellDB = MongoDB
 
   private var revertManager: RevertManager = _
 
@@ -61,11 +71,6 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   var actor: ActorRef = _
 
   createEmptyGrid(columns, rows)
-
-  object cells {
-    val cells = cellDB.read
-    //cells
-  }
 
   override def setActorSystem(system: ActorSystem): Unit = {
     _system = system
@@ -112,8 +117,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   override def saveGame(): Unit = {
     var count = 0
     for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
-      cellDB.create(grid.cell(row, column))
-      val cellType = grid.cell(row, column).cellType.toString
+      Slick_cellDB.create(grid.cell(row, column))
       count += 1
     }
     logger.info(s"Saved $count cells")
@@ -121,7 +125,42 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   override def loadGame(): Unit = {
 
-    val cells = cellDB.read
+    val cells = Slick_cellDB.read
+
+    val width = cells.map(_.x).max + 2
+    val height = cells.map(_.y).max + 2
+    createEmptyGrid(height, width)
+
+    var count = 0
+    cells.foreach(cell => {
+      grid.set(cell.x, cell.y, cell.cellType)
+      count += 1
+    })
+    gameStatus = StatusType.SET
+
+    logger.info(s"Loaded Grid of size $width, $height ($count cells)")
+
+    publish(new GridChanged)
+
+    val player1moves = cells.count(cell => cell.cellType == CellType.FIRST)
+    val player2moves = cells.count(cell => cell.cellType == CellType.SECOND)
+
+    if (player2moves < player1moves) publish(new PlayerGridChanged)
+  }
+
+  override def saveGameM(): Unit = {
+    var count = 0
+    for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
+      Mongo_cellDB.create(grid.cell(row, column))
+      count += 1
+    }
+    logger.info(s"Saved $count cells")
+  }
+
+  override def loadGameM(): Unit = {
+    val cells = Mongo_cellDB.read
+
+    logger.info(s"Mongo load: read ${cells.length} cells")
 
     val width = cells.map(_.x).max + 2
     val height = cells.map(_.y).max + 2

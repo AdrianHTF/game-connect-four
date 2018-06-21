@@ -32,8 +32,6 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
     } while (!controller.gameFinished)
   }
 
-
-
   def processInputLine(input: String): Unit = {
     val parsedInput = input.split(" ")
     parsedInput(0) match {
@@ -45,6 +43,8 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
       case "help" => showHelp()
       case "save" => controller.actor ! Save(controller)
       case "load" => controller.actor ! Load(controller)
+      case "savem" => controller.actor ! SaveM(controller)
+      case "loadm" => controller.actor ! LoadM(controller)
       case _ =>
         val col = toInt(parsedInput(0))
         lastCase(col)
