@@ -7,10 +7,9 @@ import de.htwg.se.connectfour.mvc.model.player.RealPlayer
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.model.Cell
 import de.htwg.se.connectfour.mvc.model.types.CellType
-import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, HTTPServer, Tui}
+import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Tui}
 import de.htwg.se.connectfour.mvc.persistence.{MongoDB, PlayerDB}
 
-import scala.io.StdIn
 import scala.util.Random
 
 object Main extends LazyLogging {
@@ -45,10 +44,11 @@ object Main extends LazyLogging {
 
   def getPlayersName(player: String): RealPlayer ={
     println(player + " Please insert Name\n")
-    val playername = StdIn.readLine().toString
-    //val playername = "aaa"//Random.alphanumeric.take(4).mkString
+    //val playername = StdIn.readLine().toString
+    val playername = Random.alphanumeric.filter(_.isLetter).take(4).mkString
     if (playername != null) {
       val realPlayer = RealPlayer(playername)
+      println(playername + " created\n")
       PlayerDB.create(realPlayer)
       realPlayer
     }

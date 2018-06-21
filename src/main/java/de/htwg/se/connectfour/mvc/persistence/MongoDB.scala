@@ -11,14 +11,14 @@ import org.mongodb.scala.{MongoCredential, ServerAddress}
 object MongoDB extends Dao[Cell, Long] with LazyLogging {
   type T = DBObject
 
-  val SERVER = "192.168.99.100"
+  val SERVER = "127.0.0.1"
   val PORT = 27017
   val DATABASE = "GameSession"
   val COLLECTION = "GameSave"
   val server = new ServerAddress(SERVER, PORT)
 
-  val credentials = MongoCredential.createCredential("root", "admin", "1234hot5".toArray)
-  val mongoClient = MongoClient(server, List(credentials))
+  //val credentials = MongoCredential.createCredential("root", "admin", "1234hot5".toArray)
+  val mongoClient = MongoClient(SERVER, PORT)
   val db = mongoClient.getDB(DATABASE).getCollection(COLLECTION)
 
   override def create(cell: Cell): T = {
