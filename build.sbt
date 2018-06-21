@@ -28,7 +28,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-cluster" % "2.5.11",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3",
     "com.h2database" % "h2" % "1.4.197",
-    "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0"
+    "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0",
+    "org.mongodb" %% "casbah" % "3.1.1"
   )
 }
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
