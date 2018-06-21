@@ -1,38 +1,31 @@
 package de.htwg.se.connectfour.mvc.persistence
 
-import com.mongodb.{DBObject}
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.model.Cell
-import com.mongodb.casbah.MongoClient
+import com.mongodb.casbah.MongoConnection
 import com.mongodb.casbah.commons.MongoDBObject
-import org.mongodb.scala.{MongoCredential, ServerAddress}
 
 
 object MongoDB extends Dao[Cell, Long] with LazyLogging {
-  type T = DBObject
+  type T = Unit
 
-  val SERVER = "127.0.0.1"
-  val PORT = 27017
-  val DATABASE = "GameSession"
-  val COLLECTION = "GameSave"
-  val server = new ServerAddress(SERVER, PORT)
-
-  //val credentials = MongoCredential.createCredential("root", "admin", "1234hot5".toArray)
-  val mongoClient = MongoClient(SERVER, PORT)
-  val db = mongoClient.getDB(DATABASE).getCollection(COLLECTION)
+  val mongoConn = MongoConnection()
+  val mongoColl = mongoConn("casbah_test")("test_data")
 
   override def create(cell: Cell): T = {
 
     val id = (cell.x, cell.y).toString
-    val builder = MongoDBObject.newBuilder //collection.insertOne(Document("_id" -> id, "cell" -> cell.cellType.toString))
-    builder += "_id" -> id
-    builder += "cell" -> cell.cellType
-    val cellObj: DBObject = builder.result()
-    logger.info(s"Created cell $id (${cell.x}, ${cell.y})")
 
-    cellObj
-
+    //Thread.sleep(5000)
+    mongoColl += MongoDBObject("id" -> id, "cell" -> cell.cellType.toString)
+    logger.info(s"MongoDB: Stored $id")
   }
 
-  override def read(): Seq[Cell] = ???
+  override def read(): Seq[Cell] = {
+
+    for (dbCell <- mongoColl) {
+      logger.info(dbCell.toString)
+    }
+    ???
+  }
 }

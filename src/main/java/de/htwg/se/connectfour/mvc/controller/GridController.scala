@@ -10,7 +10,7 @@ import de.htwg.se.connectfour.mvc.model.{ Cell, Grid, GridImpl }
 import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
 import de.htwg.se.connectfour.mvc.model.types.{ CellType, StatusType }
-import de.htwg.se.connectfour.mvc.persistence.CellDB
+import de.htwg.se.connectfour.mvc.persistence.Slick_CellDB
 
 import scala.swing.Publisher
 
@@ -47,7 +47,7 @@ class GridControllerActor extends Actor with LazyLogging {
 
 case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
 
-  val cellDB = CellDB
+  val cellDB = Slick_CellDB
 
   private var revertManager: RevertManager = _
 

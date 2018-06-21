@@ -3,7 +3,6 @@ package de.htwg.se.connectfour.mvc.view
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
 import de.htwg.se.connectfour.mvc.controller._
-import de.htwg.se.connectfour.mvc.model.types.CellType
 
 import scala.io.StdIn
 import scala.swing.Reactor

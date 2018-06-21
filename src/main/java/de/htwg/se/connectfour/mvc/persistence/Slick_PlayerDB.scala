@@ -3,13 +3,12 @@ package de.htwg.se.connectfour.mvc.persistence
 import slick.jdbc.H2Profile.api._
 import de.htwg.se.connectfour.mvc.model.player.RealPlayer
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.model.Cell
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 // PlayerDB *could* be used to save and load player names, but we don't use it yet.
-object PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
+object Slick_PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
   type T = Long
 
   object playerQuery extends TableQuery[PlayerTable](tag ⇒ new PlayerTable(tag)) {

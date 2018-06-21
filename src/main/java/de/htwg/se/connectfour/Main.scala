@@ -5,10 +5,8 @@ import com.google.inject.Guice
 import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.mvc.model.player.RealPlayer
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.model.Cell
-import de.htwg.se.connectfour.mvc.model.types.CellType
+import de.htwg.se.connectfour.mvc.persistence.{MongoDB, Slick_CellDB}
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Tui}
-import de.htwg.se.connectfour.mvc.persistence.{MongoDB, PlayerDB}
 
 import scala.util.Random
 
@@ -27,6 +25,8 @@ object Main extends LazyLogging {
 
   val system = ActorSystem("ActorSystem");
   val actor = system.actorOf(Props[ServerActor], "ServerActor")
+  val dbType = MongoDB
+  //val dbType = Slick_CellDB
 
   println()
 
@@ -49,7 +49,6 @@ object Main extends LazyLogging {
     if (playername != null) {
       val realPlayer = RealPlayer(playername)
       println(playername + " created\n")
-      PlayerDB.create(realPlayer)
       realPlayer
     }
     else
@@ -60,6 +59,7 @@ object Main extends LazyLogging {
 
     logger.info("starting")
 
+    /*
     val cell = Cell(1,1, CellType.EMPTY)
     val mongo = MongoDB.create(cell)
 
@@ -67,6 +67,7 @@ object Main extends LazyLogging {
     for(i <- 0 to 1) {
       logger.info(s"DB Player $i: ${PlayerDB.read.apply(i)}")
     }
+    */
 
     Tui(controller, players)
 
