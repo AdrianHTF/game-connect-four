@@ -10,6 +10,10 @@ case class Cell(x: Int, y: Int, cellType: CellType) {
   }
 
   override def toString: String = cellType.toString
+
+  def debug: String = {
+    x + ", " + y + ": " + cellType.toString
+  }
 }
 
 object Cell {
