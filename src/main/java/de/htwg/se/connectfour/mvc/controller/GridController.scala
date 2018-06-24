@@ -158,29 +158,10 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   }
 
   override def loadGameM(): Unit = {
-    val cells = Mongo_cellDB.read
 
-    logger.info(s"Mongo load: read ${cells.length} cells")
-
-    val width = cells.map(_.x).max + 2
-    val height = cells.map(_.y).max + 2
-    createEmptyGrid(height, width)
-
-    var count = 0
-    cells.foreach(cell => {
-      grid.set(cell.x, cell.y, cell.cellType)
-      count += 1
-    })
-    gameStatus = StatusType.SET
-
-    logger.info(s"Loaded Grid of size $width, $height ($count cells)")
-
+    MongoDB.read(this)
     publish(new GridChanged)
 
-    val player1moves = cells.count(cell => cell.cellType == CellType.FIRST)
-    val player2moves = cells.count(cell => cell.cellType == CellType.SECOND)
-
-    if (player2moves < player1moves) publish(new PlayerGridChanged)
   }
 
   override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)
