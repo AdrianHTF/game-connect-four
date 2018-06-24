@@ -117,7 +117,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   override def saveGame(): Unit = {
     var count = 0
     for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
-      Slick_cellDB.create(grid.cell(row, column))
+      Slick_cellDB.save(grid.cell(row, column))
       count += 1
     }
     logger.info(s"Saved $count cells")
@@ -125,7 +125,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
 
   override def loadGame(): Unit = {
 
-    val cells = Slick_cellDB.read
+    val cells = Slick_cellDB.load
 
     val width = cells.map(_.x).max + 2
     val height = cells.map(_.y).max + 2
@@ -151,17 +151,15 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
   override def saveGameM(): Unit = {
     var count = 0
     for (row <- 0 until grid.rows - 1; column <- 0 until grid.columns - 1){
-      Mongo_cellDB.create(grid.cell(row, column))
+      Mongo_cellDB.save(grid.cell(row, column))
       count += 1
     }
     logger.info(s"Saved $count cells")
   }
 
   override def loadGameM(): Unit = {
-
-    MongoDB.read(this)
+    MongoDB.load(this)
     publish(new GridChanged)
-
   }
 
   override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)

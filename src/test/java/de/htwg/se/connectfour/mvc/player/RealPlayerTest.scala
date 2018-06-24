@@ -9,7 +9,6 @@ class RealPlayerTest extends Specification {
     "be displayed as real player" in {
       player.isReal must be_==(true)
     }
-
   }
 
 }

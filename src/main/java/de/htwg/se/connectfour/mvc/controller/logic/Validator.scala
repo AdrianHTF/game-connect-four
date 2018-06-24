@@ -6,8 +6,6 @@ import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 case class Validator(grid: Grid) {
 
-  def isColumnValidAndNotFull(column: Int): Boolean = grid.isColumnValid(column) && !isColumnFull(column)
-
   def isColumnFull(column: Int): Boolean = lowestEmptyRow(column) < 0
 
   def lastRowPosition(column: Int): Int = Math.min(grid.MAX_ROW, lowestEmptyRow(column) + 1)

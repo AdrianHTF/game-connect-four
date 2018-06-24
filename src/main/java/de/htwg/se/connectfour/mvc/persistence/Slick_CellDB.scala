@@ -23,11 +23,12 @@ object Slick_CellDB extends Dao[Cell, Long] with LazyLogging {
     (cellQuery.schema).create)
   Await.result(database.run(setupCell), Duration.Inf)
 
-  override def create(cell: Cell): T = {
+  override def save(cell: Cell): T = {
+    //Await.result(database.run(cellQuery.delete), Duration.Inf)  possible delete
     val cellId: T = Await.result(database.run(cellReturnValue += CellData(cell.x, cell.y, cell.cellType.toString)), Duration.Inf)
     cellId
   }
 
-  override def read(): Seq[Cell] =
+  override def load(): Seq[Cell] =
     Await.result(database.run(cellQuery.all), Duration.Inf).map(source => Cell(source.x, source.y, Cell.toCellType(source.cellType)))
 }

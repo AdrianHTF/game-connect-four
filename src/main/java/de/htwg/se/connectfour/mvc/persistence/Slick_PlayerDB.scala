@@ -24,11 +24,11 @@ object Slick_PlayerDB extends Dao[RealPlayer, Long] with LazyLogging {
     (playerQuery.schema).create)
   Await.result(database.run(setupPlayer), Duration.Inf)
 
-  override def create(player: RealPlayer): T = {
+  override def save(player: RealPlayer): T = {
     val PlayerId: T = Await.result(database.run(playerReturnValue += PlayerData(player.name)), Duration.Inf)
     PlayerId
   }
 
-  override def read(): Seq[RealPlayer] =
+  override def load(): Seq[RealPlayer] =
     Await.result(database.run(playerQuery.all), Duration.Inf).map(source => RealPlayer(source.name))
 }

@@ -4,6 +4,8 @@ import de.htwg.se.connectfour.mvc.model.{Cell, GridImpl}
 import de.htwg.se.connectfour.mvc.model.types.CellType
 import org.specs2.mutable.Specification
 
+import scala.xml.dtd.EMPTY
+
 
 class GridControllerTest extends Specification {
   "New GridController of grid 3x2" should {
@@ -78,6 +80,31 @@ class GridControllerTest extends Specification {
       localGridController.gameFinished must be_==(true)
     }
 
+    "undo removes last draw" in {
+      val localGridController = GridController(3, 2)
 
+      localGridController.checkAddCell(0, CellType.FIRST)
+      localGridController.undo()
+      localGridController.cell(0, 0).cellType must be_== (CellType.EMPTY)
+    }
+
+    "redo" in {
+      val localGridController = GridController(3, 2)
+
+      localGridController.checkAddCell(0, CellType.FIRST)
+      localGridController.undo()
+      localGridController.redo()
+      localGridController.cell(0, 1).cellType must be_== (CellType.FIRST)
+    }
+
+    "check is column full" in {
+      val localGridController = GridController(3, 2)
+      localGridController.isColumnFull(0) must be_== (false)
+      localGridController.checkAddCell(0, CellType.FIRST)
+      localGridController.checkAddCell(0, CellType.SECOND)
+      localGridController.checkAddCell(0, CellType.FIRST)
+      localGridController.checkAddCell(0, CellType.SECOND)
+      localGridController.isColumnFull(0) must be_== (true)
+    }
   }
 }

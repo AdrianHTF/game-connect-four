@@ -1,10 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller.logic
 
-import akka.actor.ActorRef
 import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.Main
-import de.htwg.se.connectfour.mvc.controller.Move
-import de.htwg.se.connectfour.mvc.model.types.CellType
 
 class RevertManager extends LazyLogging {
 
