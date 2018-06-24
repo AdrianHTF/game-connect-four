@@ -25,8 +25,8 @@ object Main extends LazyLogging {
 
   val system = ActorSystem("ActorSystem");
   val actor = system.actorOf(Props[ServerActor], "ServerActor")
-  val dbType = MongoDB
-  //val dbType = Slick_CellDB
+  //val dbType = MongoDB
+  val dbType = Slick_CellDB
 
   println()
 
