@@ -7,6 +7,7 @@ addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.4")
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.3.5")
 
+
 // source: https://github.com/scoverage/sbt-coveralls
 //adSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
 //addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.4")

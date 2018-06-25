@@ -35,6 +35,10 @@ class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: C
     secondPlayer = second
   }
 
+  def applyTurn(column: Int): Unit = {
+    controller.checkAddCell(column, currentPlayerCellType)
+  }
+
   def currentPlayerCellType: CellType = cellType(currentPlayer)
 
   def prevPlayerCellType: CellType = cellType(previousPlayer)

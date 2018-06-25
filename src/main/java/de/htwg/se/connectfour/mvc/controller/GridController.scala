@@ -15,12 +15,16 @@ import de.htwg.se.connectfour.mvc.persistence.CellDB
 import scala.swing.Publisher
 
 case class Move(col: Int, ct: CellType, gridController: Controller)
+case class NewGrid(columns: Int, rows: Int, gridController: Controller)
 
 class GridControllerActor extends Actor with LazyLogging {
   def receive = {
     case Move(col, ct, gridController) => {
       if (Main.debug.filter) logger.info("GridControllerActor Move received. col = " + col + ", type = " + ct.toString)
       gridController.checkAddCell(col, ct);
+    }
+    case NewGrid(columns, rows, gridController) => {
+      gridController.createEmptyGrid(columns, rows)
     }
   }
 }

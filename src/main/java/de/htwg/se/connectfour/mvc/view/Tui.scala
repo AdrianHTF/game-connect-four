@@ -37,8 +37,8 @@ case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Rea
     parsedInput(0) match {
       case "quit" => quit()
       case "new" => controller.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
-      case "undo" => 1 to parsedInput(1).toInt foreach { _ => controller.undo() }
-      case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
+      case "undo" => controller.undo()
+      case "redo" => controller.redo()
       case "show" => showGridWithMessage()
       case "help" => showHelp()
       case "save" => controller.saveGame

@@ -2,12 +2,12 @@ package de.htwg.se.connectfour.mvc.view
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ ContentTypes, HttpEntity }
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{ Route, StandardRoute }
+import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.controller.{ Controller, Move }
+import de.htwg.se.connectfour.mvc.controller.{Controller, Move, NewGrid}
 
 class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSystem: ActorSystem) extends LazyLogging {
 
@@ -21,18 +21,19 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
     pathSingleSlash {
       complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "<h1>HTWG Connect-Four</h1>"))
     }
-    path("cf") {
+    path("") {
       gridtoHtml
     } ~
-      path("cf" / "new") {
-        controller.createEmptyGrid(7, 6)
+      path("new") {
+        controller.actor ! NewGrid(7, 6, controller)
+        //controller.createEmptyGrid(7, 6)
         gridtoHtml
       } ~
-      path("cf" / "undo") {
+      path("undo") {
         controller.undo
         gridtoHtml
       } ~
-      path("cf" / "redo") {
+      path("redo") {
         controller.redo
         gridtoHtml
       } ~
@@ -62,5 +63,6 @@ class HTTPServer(controller: Controller, gamingPlayers: GamingPlayers, actorSyst
   def processInputLine(input: String): Unit = {
     val column = input.toInt
     controller.actor ! Move(column, gamingPlayers.currentPlayerCellType, controller)
+    //gamingPlayers.applyTurn(column)
   }
 }
